@@ -11,10 +11,18 @@ class FROGGER_API AFrogPawn : public APawn
 {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this pawn's properties
-	AFrogPawn();
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* MoveUpInputAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* MoveDownInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* MoveLeftInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* MoveRightInputAction;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -23,25 +31,37 @@ protected:
 	void MoveDown();
 	void MoveRight();
 	void MoveLeft();
+	void BeginMove(const FVector& Direction);
 
 
-public:	
+public:
+
+	// Sets default values for this pawn's properties
+	AFrogPawn();
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-		class UInputAction* MoveUpInputAction;
+	//If in the middle of movement;
+	UPROPERTY(BlueprintReadWrite)
+	bool bMoving;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-		class UInputAction* MoveDownInputAction;
+	UPROPERTY(BlueprintReadWrite)
+	FVector StartPosition;
+	
+	UPROPERTY(BlueprintReadWrite)
+	FVector Destination;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-		class UInputAction* MoveLeftInputAction;
+	UPROPERTY(EditAnywhere)
+	int MovementUnit;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-		class UInputAction* MoveRightInputAction;
+	UPROPERTY(EditAnywhere)
+	double TimeToMove;
+	
+	double TimePassed;
+	
 
 };
