@@ -6,6 +6,7 @@
 #include "Engine/World.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "VectorTypes.h"
 
 // Sets default values
 AFrogPawn::AFrogPawn()
@@ -19,9 +20,6 @@ AFrogPawn::AFrogPawn()
 void AFrogPawn::BeginPlay()
 {
 	Super::BeginPlay();
-
-	
-	
 }
 
 // Called every frame
@@ -29,6 +27,21 @@ void AFrogPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
+	if(bMoving)
+	{
+		auto Alpha = FGenericPlatformMath::Min(TimePassed * 100 / TimeToMove,100.0);
+		auto MoveTick = UE::Geometry::Lerp(StartPosition,Destination, Alpha);
+		SetActorLocation(MoveTick);
+		TimePassed += DeltaTime;
+
+		if(Alpha == 100.0)
+		{
+			bMoving = false;
+		}
+	}
+	
+	
 }
 
 // Called to bind functionality to input
@@ -48,29 +61,39 @@ void AFrogPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cast failed!"));
 	}
-
 }
+
+void AFrogPawn::BeginMove(const FVector& Direction)
+{
+	if(bMoving)
+	{
+		return;
+	}
+	StartPosition = GetActorLocation();
+	Destination = StartPosition + Direction * MovementUnit;
+	bMoving = true;
+	TimePassed = 0;
+}
+
 
 void AFrogPawn::MoveUp()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Moveu para cima!"));
+	BeginMove(FVector(1,0,0));
 }
 
 void AFrogPawn::MoveDown()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Moveu para baixo!"));
-
-}
-
-void AFrogPawn::MoveLeft()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Moveu para esquerda!"));
-
+	BeginMove(FVector(-1,0,0));
 }
 
 void AFrogPawn::MoveRight()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Moveu para direita!"));
-
+	BeginMove(FVector(0,1,0));
 }
+
+void AFrogPawn::MoveLeft()
+{
+	BeginMove(FVector(0,-1,0));
+}
+
 
