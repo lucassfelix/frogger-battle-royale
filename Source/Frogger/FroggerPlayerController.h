@@ -19,7 +19,13 @@ public:
 	// Mapping Context
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* FrogMappingContext;
-
+	
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnServerMove();
+	
+	UFUNCTION(Server, unreliable, WithValidation)
+	void Server_Move();
+	
 };

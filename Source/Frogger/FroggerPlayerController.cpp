@@ -17,3 +17,13 @@ void AFroggerPlayerController::BeginPlay()
 	}
 
 }
+
+void AFroggerPlayerController::Server_Move_Implementation()
+{
+	OnServerMove();
+}
+
+bool AFroggerPlayerController::Server_Move_Validate()
+{
+	return true;
+}

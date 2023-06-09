@@ -6,6 +6,7 @@
 #include "Engine/World.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "FroggerPlayerController.h"
 #include "VectorTypes.h"
 
 // Sets default values
@@ -38,6 +39,7 @@ void AFrogPawn::Tick(float DeltaTime)
 		if(Alpha == 100.0)
 		{
 			bMoving = false;
+			OnMoveFinished();
 		}
 	}
 	
@@ -73,6 +75,8 @@ void AFrogPawn::BeginMove(const FVector& Direction)
 	Destination = StartPosition + Direction * MovementUnit;
 	bMoving = true;
 	TimePassed = 0;
+	
+	Cast<AFroggerPlayerController>(GetLocalViewingPlayerController())->Server_Move();
 }
 
 

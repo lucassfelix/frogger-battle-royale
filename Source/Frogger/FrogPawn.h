@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
 #include "FrogPawn.generated.h"
 
 UCLASS()
-class FROGGER_API AFrogPawn : public APawn
+class FROGGER_API AFrogPawn : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -62,6 +63,9 @@ public:
 	double TimeToMove;
 	
 	double TimePassed;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnMoveFinished();
 	
 
 };
