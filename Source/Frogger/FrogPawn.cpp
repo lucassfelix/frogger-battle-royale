@@ -15,12 +15,22 @@ AFrogPawn::AFrogPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	Initialized = false;
 }
 
 // Called when the game starts or when spawned
 void AFrogPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+}
+
+void AFrogPawn::LateInitialize()
+{
+	if (auto Player = Cast<AFroggerPlayerController>(GetController()))
+	{
+		FroggerController = Player;
+	}
 }
 
 // Called every frame
@@ -28,12 +38,20 @@ void AFrogPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!Initialized)
+	{
+		LateInitialize();
+		return;
+	}
+
 
 	if(bMoving)
 	{
 		auto Alpha = FGenericPlatformMath::Min(TimePassed * 100 / TimeToMove,100.0);
-		auto MoveTick = UE::Geometry::Lerp(StartPosition,Destination, Alpha);
-		SetActorLocation(MoveTick);
+		auto MoveTick = UE::Geometry::Lerp(StartPosition,Destination, Alpha) - GetActorLocation();
+		AddActorWorldOffset(MoveTick);
+		FroggerController->Server_Move(MoveTick, this);
+		//SetActorLocation(MoveTick);
 		TimePassed += DeltaTime;
 
 		if(Alpha == 100.0)
@@ -75,8 +93,6 @@ void AFrogPawn::BeginMove(const FVector& Direction)
 	Destination = StartPosition + Direction * MovementUnit;
 	bMoving = true;
 	TimePassed = 0;
-	
-	Cast<AFroggerPlayerController>(GetLocalViewingPlayerController())->Server_Move();
 }
 
 

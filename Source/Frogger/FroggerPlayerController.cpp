@@ -3,6 +3,9 @@
 
 #include "FroggerPlayerController.h"
 #include "EnhancedInputSubsystems.h"
+#include "FroggerGameState.h"
+#include "Kismet/GameplayStatics.h"
+#include "FrogPawn.h"
 
 void AFroggerPlayerController::BeginPlay()
 {
@@ -15,15 +18,16 @@ void AFroggerPlayerController::BeginPlay()
 	{
 		Subsystem->AddMappingContext(FrogMappingContext, 0);
 	}
-
 }
 
-void AFroggerPlayerController::Server_Move_Implementation()
+void AFroggerPlayerController::Server_Move_Implementation(FVector TargetLocation, AFrogPawn* Frog)
 {
-	OnServerMove();
+	//OnServerMove(TargetLocation);
+
+	AFroggerGameState::GetFroggerGameState(this)->Server_ReplicateMove(TargetLocation, Frog);
 }
 
-bool AFroggerPlayerController::Server_Move_Validate()
+bool AFroggerPlayerController::Server_Move_Validate(FVector TargetLocation, AFrogPawn* Frog)
 {
 	return true;
 }

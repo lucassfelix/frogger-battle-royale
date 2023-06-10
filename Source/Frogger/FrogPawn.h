@@ -8,7 +8,7 @@
 #include "FrogPawn.generated.h"
 
 UCLASS()
-class FROGGER_API AFrogPawn : public ACharacter
+class FROGGER_API AFrogPawn : public APawn
 {
 	GENERATED_BODY()
 
@@ -35,6 +35,10 @@ protected:
 	void BeginMove(const FVector& Direction);
 
 
+	bool Initialized;
+
+	void LateInitialize();
+
 public:
 
 	// Sets default values for this pawn's properties
@@ -49,6 +53,8 @@ public:
 	//If in the middle of movement;
 	UPROPERTY(BlueprintReadWrite)
 	bool bMoving;
+
+	class AFroggerPlayerController* FroggerController;
 
 	UPROPERTY(BlueprintReadWrite)
 	FVector StartPosition;
@@ -66,6 +72,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnMoveFinished();
-	
+
 
 };

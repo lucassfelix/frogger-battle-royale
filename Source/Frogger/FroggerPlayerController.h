@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "FrogPawn.h"
 #include "FroggerPlayerController.generated.h"
 
 /**
@@ -23,9 +24,9 @@ public:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnServerMove();
+	void OnServerMove(FVector TargetLocation, AFrogPawn* Frog);
 	
 	UFUNCTION(Server, unreliable, WithValidation)
-	void Server_Move();
+	void Server_Move(FVector TargetLocation, AFrogPawn* Frog);
 	
 };
