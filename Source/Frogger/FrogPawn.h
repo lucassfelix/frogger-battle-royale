@@ -7,8 +7,16 @@
 #include "GameFramework/Pawn.h"
 #include "FrogPawn.generated.h"
 
+enum Dir
+{
+	Down,
+	Up,
+	Right,
+	Left
+};
+
 UCLASS()
-class FROGGER_API AFrogPawn : public APawn
+class FROGGER_API AFrogPawn : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -32,10 +40,10 @@ protected:
 	void MoveDown();
 	void MoveRight();
 	void MoveLeft();
-	void BeginMove(const FVector& Direction);
+	void BeginMove(const FVector& NewDirection);
 
 
-	bool Initialized;
+	bool bInitialized;
 
 	void LateInitialize();
 
@@ -62,6 +70,8 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	FVector Destination;
 
+	Dir Direction;
+
 	UPROPERTY(EditAnywhere)
 	int MovementUnit;
 
@@ -73,5 +83,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnMoveFinished();
 
+	//Tick Auxiliary Functions
+	void MoveCustom(float DeltaTime); 
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void MoveCharacter(float DeltaTime);
+
+	void LaunchFrog();
 
 };
