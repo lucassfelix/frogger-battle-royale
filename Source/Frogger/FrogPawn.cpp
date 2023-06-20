@@ -50,7 +50,8 @@ void AFrogPawn::Tick(float DeltaTime)
 
 	if (bMoving && Direction != None)
 	{
-		LaunchFrog();
+		FroggerController->LaunchFrog(LaunchStrength,Direction);
+		//LaunchFrog();
 		Direction = None;
 	}
 	

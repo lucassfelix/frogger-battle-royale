@@ -48,6 +48,7 @@ protected:
 
 public:
 
+	UPROPERTY()
 	class AFroggerPlayerController* FroggerController;
 	
 	// Sets default values for this pawn's properties

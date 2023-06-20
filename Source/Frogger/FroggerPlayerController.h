@@ -23,6 +23,17 @@ public:
 	
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaSeconds) override;
+
+	void LateInitialize();
+
+	UPROPERTY()
+	AFrogPawn* FrogPawn;
+
+	bool bInitialized;
+	
+	void LaunchFrog(float LaunchStrength, EDir Direction);
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnServerMove(FVector TargetLocation, AFrogPawn* Frog);
 	
