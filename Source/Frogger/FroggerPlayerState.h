@@ -13,5 +13,8 @@ UCLASS()
 class FROGGER_API AFroggerPlayerState : public APlayerState
 {
 	GENERATED_BODY()
+
+		UFUNCTION(BlueprintCallable)
+		void SetPlayerName_BP(const FString& Name);
 	
 };

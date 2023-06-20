@@ -3,3 +3,7 @@
 
 #include "FroggerPlayerState.h"
 
+void AFroggerPlayerState::SetPlayerName_BP(const FString& Name)
+{
+	SetPlayerName(Name);
+}

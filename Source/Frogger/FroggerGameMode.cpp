@@ -25,3 +25,8 @@ void AFroggerGameMode::PreLogin(const FString& Options, const FString& Address, 
 	}
 	
 }
+
+void AFroggerGameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+}
