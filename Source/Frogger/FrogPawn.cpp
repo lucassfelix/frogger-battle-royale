@@ -7,13 +7,15 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "FroggerPlayerController.h"
-#include "VectorTypes.h"
+#include "GameFramework/PawnMovementComponent.h"
 
 // Sets default values
 AFrogPawn::AFrogPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	Direction = None;
 	
 	bInitialized = false;
 	bMoving = false;
@@ -28,7 +30,7 @@ void AFrogPawn::BeginPlay()
 
 void AFrogPawn::LateInitialize()
 {
-	if (auto Player = Cast<AFroggerPlayerController>(GetController()))
+	if (const auto Player = Cast<AFroggerPlayerController>(GetController()))
 	{
 		FroggerController = Player;
 		bInitialized = true;
@@ -46,67 +48,76 @@ void AFrogPawn::Tick(float DeltaTime)
 		return;
 	}
 
-	if (bMoving)
+	if (bMoving && Direction != None)
 	{
-		//MoveCustom(DeltaTime);
-		//MoveCharacter(DeltaTime);
 		LaunchFrog();
+		Direction = None;
 	}
+	
+}
+
+void AFrogPawn::RoundLocation() const
+{
+	const auto Location = GetActorLocation();
+
+	const auto RoundedX = round(Location.X);
+	const auto RoundedY = round(Location.Y);
+
+	const auto RemainderX = static_cast<int>(abs(RoundedX)) % 100;
+	const auto RemainderY = static_cast<int>(abs(RoundedY)) % 100;
+
+	double NewX, NewY;
+	
+	if(RemainderX > 50)
+	{
+		NewX = Location.X < 0 ? -(abs(RoundedX) - RemainderX + 100) : RoundedX - RemainderX + 100;
+	}
+	else
+	{
+		NewX = Location.X < 0 ? -(abs(RoundedX) - RemainderX) : RoundedX - RemainderX;
+	}
+
+	if(RemainderY > 50)
+	{
+		NewY = Location.Y < 0 ? -(abs(RoundedY) - RemainderY + 100) : RoundedY - RemainderY + 100;
+	}
+	else
+	{
+		NewY = Location.Y < 0 ? -(abs(RoundedY) - RemainderY) : RoundedY - RemainderY;
+	}
+
+	GetRootComponent()->SetWorldLocation(FVector(NewX,NewY,Location.Z));
 }
 
 void AFrogPawn::LaunchFrog()
 {
-	long double mult = 0;
+	const long double Mult = sqrt(LaunchStrength * abs(GetWorld()->GetGravityZ()));
 
 	FVector U;
-
-	mult = sqrt(100 * abs(GetWorld()->GetGravityZ()));
 
 	switch (Direction)
 	{
 	case Down:
-		U = FVector(-cos(45), 0, sin(45)) * mult;
+		U = FVector(-cos(45), 0, sin(45)) * Mult;
 		break;
 	case Up:
-		U = FVector(cos(45), 0, sin(45)) * mult;
+		U = FVector(cos(45), 0, sin(45)) * Mult;
 		break;
 	case Right:
-		U = FVector(0, cos(45), sin(45)) * mult;
+		U = FVector(0, cos(45), sin(45)) * Mult;
 		break;
 	case Left:
-		U = FVector(0, -cos(45), sin(45)) * mult;
+		U = FVector(0, -cos(45), sin(45)) * Mult;
 		break;
 	default:
 		break;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("ACharacter::LaunchCharacter '%s' (%f,%f,%f)"), *GetName(), U.X, U.Y, U.Z);
-
 	LaunchCharacter(U, false, false);
-	bMoving = false;
 }
 
-void AFrogPawn::MoveCustom(float DeltaTime)
-{
-	if (bMoving)
-	{
-		auto Alpha = FGenericPlatformMath::Min(TimePassed * 100 / TimeToMove, 100.0);
-		auto MoveTick = UE::Geometry::Lerp(StartPosition, Destination, Alpha) - GetActorLocation();
-		AddActorWorldOffset(MoveTick);
-		FroggerController->Server_Move(MoveTick, this);
-		//SetActorLocation(MoveTick);
-		TimePassed += DeltaTime;
-
-		if (Alpha == 100.0)
-		{
-			bMoving = false;
-			OnMoveFinished();
-		}
-	}
 
 
-
-}
 
 // Called to bind functionality to input
 void AFrogPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -127,43 +138,46 @@ void AFrogPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	}
 }
 
-void AFrogPawn::BeginMove(const FVector& NewDirection)
+void AFrogPawn::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+
+	bMoving = false;
+	GetMovementComponent()->Velocity = FVector(0,0,0);	
+	
+	RoundLocation();
+}
+
+void AFrogPawn::BeginMove(const EDir& NewDirection)
 {
 	if(bMoving)
 	{
 		return;
 	}
-	StartPosition = GetActorLocation();
-	Destination = StartPosition + NewDirection * MovementUnit;
+	
+	Direction = NewDirection;
 	bMoving = true;
-	TimePassed = 0;
 }
 
 
 void AFrogPawn::MoveUp()
 {
-	Direction = Up;
-	BeginMove(FVector(1,0,0));
+	BeginMove(Up);
 }
 
 void AFrogPawn::MoveDown()
 {
-	Direction = Down;
-
-	BeginMove(FVector(-1,0,0));
+	BeginMove(Down);
 }
 
 void AFrogPawn::MoveRight()
 {
-	Direction = Right;
-
-	BeginMove(FVector(0,1,0));
+	BeginMove(Right);
 }
 
 void AFrogPawn::MoveLeft()
 {
-	Direction = Left;
-	BeginMove(FVector(0,-1,0));
+	BeginMove(Left);
 }
 
 

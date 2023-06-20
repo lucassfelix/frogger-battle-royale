@@ -7,12 +7,13 @@
 #include "GameFramework/Pawn.h"
 #include "FrogPawn.generated.h"
 
-enum Dir
+enum EDir
 {
 	Down,
 	Up,
 	Right,
-	Left
+	Left,
+	None
 };
 
 UCLASS()
@@ -40,15 +41,15 @@ protected:
 	void MoveDown();
 	void MoveRight();
 	void MoveLeft();
-	void BeginMove(const FVector& NewDirection);
-
-
-	bool bInitialized;
-
+	void BeginMove(const EDir& NewDirection);
 	void LateInitialize();
+	
+	bool bInitialized;
 
 public:
 
+	class AFroggerPlayerController* FroggerController;
+	
 	// Sets default values for this pawn's properties
 	AFrogPawn();
 	
@@ -56,39 +57,24 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
-	//If in the middle of movement;
+	// Called when character touches ground
+	virtual void Landed(const FHitResult& Hit) override;
+	
+	EDir Direction;
+	
+	//Is character is in the middle of movement?
 	UPROPERTY(BlueprintReadWrite)
 	bool bMoving;
-
-	class AFroggerPlayerController* FroggerController;
-
-	UPROPERTY(BlueprintReadWrite)
-	FVector StartPosition;
 	
-	UPROPERTY(BlueprintReadWrite)
-	FVector Destination;
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	float LaunchStrength;
 
-	Dir Direction;
-
-	UPROPERTY(EditAnywhere)
-	int MovementUnit;
-
-	UPROPERTY(EditAnywhere)
-	double TimeToMove;
+	void RoundLocation() const;
 	
-	double TimePassed;
-
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnMoveFinished();
 
-	//Tick Auxiliary Functions
-	void MoveCustom(float DeltaTime); 
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void MoveCharacter(float DeltaTime);
-
 	void LaunchFrog();
-
 };
