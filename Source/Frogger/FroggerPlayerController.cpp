@@ -53,9 +53,6 @@ void AFroggerPlayerController::LaunchFrog(const float HorizontalRange, const flo
 	const double Vx = HorizontalRange/TimeToLand;
 	const double Vy = abs(GetWorld()->GetGravityZ()) * TimeToLand/2;
 
-	UE_LOG(LogTemp, Warning, TEXT("Gravity = %f VY = %f"), abs(GetWorld()->GetGravityZ()) , Vy);
-
-
 	FVector U;
 
 	switch (Direction)

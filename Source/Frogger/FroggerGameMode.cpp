@@ -23,6 +23,8 @@ void AFroggerGameMode::PreLogin(const FString& Options, const FString& Address, 
 	{
 		ErrorMessage = ErrorMessageMatchIsFull;
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *Options);
 	
 }
 
