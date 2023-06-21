@@ -43,30 +43,34 @@ void AFroggerPlayerController::LateInitialize()
 }
 
 
-void AFroggerPlayerController::LaunchFrog(const float LaunchStrength, const EDir Direction)
+void AFroggerPlayerController::LaunchFrog(const float HorizontalRange, const float TimeToLand ,const EDir Direction)
 {
 	if(!bInitialized)
 	{
 		return;
 	}
 	
-	const long double Mult = sqrt(LaunchStrength * abs(GetWorld()->GetGravityZ()));
+	const double Vx = HorizontalRange/TimeToLand;
+	const double Vy = abs(GetWorld()->GetGravityZ()) * TimeToLand/2;
+
+	UE_LOG(LogTemp, Warning, TEXT("Gravity = %f VY = %f"), abs(GetWorld()->GetGravityZ()) , Vy);
+
 
 	FVector U;
 
 	switch (Direction)
 	{
 	case Down:
-		U = FVector(-cos(45), 0, sin(45)) * Mult;
+		U = FVector(Vx, 0, Vy);
 		break;
 	case Up:
-		U = FVector(cos(45), 0, sin(45)) * Mult;
+		U = FVector(Vx, 0, Vy);
 		break;
 	case Right:
-		U = FVector(0, cos(45), sin(45)) * Mult;
+		U = FVector(0, Vx, Vy);
 		break;
 	case Left:
-		U = FVector(0, -cos(45), sin(45)) * Mult;
+		U = FVector(0, Vx, Vy);
 		break;
 	default:
 		break;

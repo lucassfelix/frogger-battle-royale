@@ -32,7 +32,7 @@ public:
 
 	bool bInitialized;
 	
-	void LaunchFrog(float LaunchStrength, EDir Direction);
+	void LaunchFrog(const float HorizontalRange, const float TimeToLand, const EDir Direction);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnServerMove(FVector TargetLocation, AFrogPawn* Frog);

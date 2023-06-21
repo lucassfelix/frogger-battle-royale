@@ -69,8 +69,13 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool bMoving;
 	
-	UPROPERTY(EditAnywhere, Category = "Movement")
-	float LaunchStrength;
+	UPROPERTY(EditAnywhere, Category = "Launch")
+	float HorizontalRange;
+
+	UPROPERTY(EditAnywhere, Category = "Launch")
+	float TimeToLand;
+
+	
 
 	void RoundLocation() const;
 	

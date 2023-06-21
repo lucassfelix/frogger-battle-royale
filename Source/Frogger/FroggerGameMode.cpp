@@ -16,12 +16,12 @@ void AFroggerGameMode::PreLogin(const FString& Options, const FString& Address, 
 
 	if(HasMatchStarted())
 	{
-		ErrorMessage = TEXT("Unable to connect to a match in progress!");
+		ErrorMessage = ErrorMessageMatchInProgress;
 	}
 
 	if(NumPlayers >= MaxPlayers)
 	{
-		ErrorMessage = TEXT("Unable to connect! Match is already full!");
+		ErrorMessage = ErrorMessageMatchIsFull;
 	}
 	
 }

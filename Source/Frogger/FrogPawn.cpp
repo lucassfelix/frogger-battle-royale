@@ -50,7 +50,7 @@ void AFrogPawn::Tick(float DeltaTime)
 
 	if (bMoving && Direction != None)
 	{
-		FroggerController->LaunchFrog(LaunchStrength,Direction);
+		FroggerController->LaunchFrog(HorizontalRange, TimeToLand, Direction);
 		//LaunchFrog();
 		Direction = None;
 	}
@@ -92,7 +92,7 @@ void AFrogPawn::RoundLocation() const
 
 void AFrogPawn::LaunchFrog()
 {
-	const long double Mult = sqrt(LaunchStrength * abs(GetWorld()->GetGravityZ()));
+	const long double Mult = sqrt(HorizontalRange/TimeToLand * abs(GetWorld()->GetGravityZ()));
 
 	FVector U;
 

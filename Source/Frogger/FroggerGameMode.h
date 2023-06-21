@@ -27,6 +27,11 @@ public:
 	
 	//Called every time a new player Joins the game
 	virtual void PostLogin(APlayerController* NewPlayer) override;
-	
+
+	UPROPERTY(EditDefaultsOnly)
+	FString ErrorMessageMatchInProgress;
+
+	UPROPERTY(EditDefaultsOnly)
+	FString ErrorMessageMatchIsFull;
 	
 };
