@@ -61,7 +61,7 @@ void AFroggerPlayerController::LaunchFrog(const float HorizontalRange, const flo
 	switch (Direction)
 	{
 	case Down:
-		U = FVector(Vx, 0, Vy);
+		U = FVector(-Vx, 0, Vy);
 		break;
 	case Up:
 		U = FVector(Vx, 0, Vy);
@@ -70,7 +70,7 @@ void AFroggerPlayerController::LaunchFrog(const float HorizontalRange, const flo
 		U = FVector(0, Vx, Vy);
 		break;
 	case Left:
-		U = FVector(0, Vx, Vy);
+		U = FVector(0, -Vx, Vy);
 		break;
 	default:
 		break;
