@@ -3,11 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
 #include "FrogPawn.generated.h"
 
+enum EDir
+{
+	Down,
+	Up,
+	Right,
+	Left,
+	None
+};
+
 UCLASS()
-class FROGGER_API AFrogPawn : public APawn
+class FROGGER_API AFrogPawn : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -31,11 +41,16 @@ protected:
 	void MoveDown();
 	void MoveRight();
 	void MoveLeft();
-	void BeginMove(const FVector& Direction);
-
+	void BeginMove(const EDir& NewDirection);
+	void LateInitialize();
+	
+	bool bInitialized;
 
 public:
 
+	UPROPERTY()
+	class AFroggerPlayerController* FroggerController;
+	
 	// Sets default values for this pawn's properties
 	AFrogPawn();
 	
@@ -43,25 +58,29 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
-	//If in the middle of movement;
+	// Called when character touches ground
+	virtual void Landed(const FHitResult& Hit) override;
+	
+	EDir Direction;
+	
+	//Is character is in the middle of movement?
 	UPROPERTY(BlueprintReadWrite)
 	bool bMoving;
-
-	UPROPERTY(BlueprintReadWrite)
-	FVector StartPosition;
 	
-	UPROPERTY(BlueprintReadWrite)
-	FVector Destination;
+	UPROPERTY(EditAnywhere, Category = "Launch")
+	float HorizontalRange;
 
-	UPROPERTY(EditAnywhere)
-	int MovementUnit;
+	UPROPERTY(EditAnywhere, Category = "Launch")
+	float TimeToLand;
 
-	UPROPERTY(EditAnywhere)
-	double TimeToMove;
-	
-	double TimePassed;
 	
 
+	void RoundLocation() const;
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnMoveFinished();
+
+	void LaunchFrog();
 };

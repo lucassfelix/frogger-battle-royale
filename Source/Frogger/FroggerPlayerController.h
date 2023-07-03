@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "FrogPawn.h"
 #include "FroggerPlayerController.generated.h"
 
 /**
@@ -19,7 +20,24 @@ public:
 	// Mapping Context
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* FrogMappingContext;
-
+	
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaSeconds) override;
+
+	void LateInitialize();
+
+	UPROPERTY()
+	AFrogPawn* FrogPawn;
+
+	bool bInitialized;
+	
+	void LaunchFrog(const float HorizontalRange, const float TimeToLand, const EDir Direction);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnServerMove(FVector TargetLocation, AFrogPawn* Frog);
+	
+	UFUNCTION(Server, unreliable, WithValidation)
+	void Server_Move(FVector TargetLocation, AFrogPawn* Frog);
+	
 };
