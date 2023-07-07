@@ -3,3 +3,7 @@
 
 #include "FroggerGameState.h"
 
+void AFroggerGameState::TravelToGame()
+{
+	GetWorld()->ServerTravel(GameMapName,false,true);
+}

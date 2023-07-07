@@ -33,5 +33,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	FString ErrorMessageMatchIsFull;
+
+	
 	
 };

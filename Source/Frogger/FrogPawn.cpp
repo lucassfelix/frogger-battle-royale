@@ -143,6 +143,8 @@ void AFrogPawn::Landed(const FHitResult& Hit)
 {
 	Super::Landed(Hit);
 
+	UE_LOG(LogTemp,Warning,TEXT("Landed"));
+	
 	bMoving = false;
 	GetMovementComponent()->Velocity = FVector(0,0,0);	
 	

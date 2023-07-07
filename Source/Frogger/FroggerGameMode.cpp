@@ -25,7 +25,7 @@ void AFroggerGameMode::PreLogin(const FString& Options, const FString& Address, 
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *Options);
-	
+	                                   
 }
 
 void AFroggerGameMode::PostLogin(APlayerController* NewPlayer)
