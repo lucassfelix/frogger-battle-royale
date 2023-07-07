@@ -5,5 +5,5 @@
 
 void AFroggerGameState::TravelToGame()
 {
-	GetWorld()->ServerTravel(GameMapName,false,true);
+	GetWorld()->ServerTravel(GameMapName,false,false);
 }
