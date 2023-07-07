@@ -103,11 +103,22 @@ bool AFroggerPlayerController::Server_Impulse_Validate(AMovingPlatform* Platform
 
 void AFroggerPlayerController::Server_Rotate_Implementation(EDir Direction, AFrogPawn* Frog)
 {
+	if(!IsValid(FrogPawn))
+	{
+		UE_LOG(LogTemp,Warning,TEXT("FrogPawn não é valido!"));
+		return;
+	}
+	if(!IsValid(FrogPawn->FrogMesh))
+	{
+		UE_LOG(LogTemp,Warning,TEXT("FrogMesh não é valido!"));
+		return;
+	}
+	
 	switch (Direction) {
-		case Down: Frog->FrogMesh->SetWorldRotation(FRotator(0,90,0)); break;
-		case Up: Frog->FrogMesh->SetWorldRotation(FRotator(0,270,0)); break;
-		case Right: Frog->FrogMesh->SetWorldRotation(FRotator(0,0,0)); break;
-		case Left: Frog->FrogMesh->SetWorldRotation(FRotator(0,180,0)); break;
+		case Down: FrogPawn->FrogMesh->SetWorldRotation(FRotator(0,90,0)); break;
+		case Up: FrogPawn->FrogMesh->SetWorldRotation(FRotator(0,270,0)); break;
+		case Right: FrogPawn->FrogMesh->SetWorldRotation(FRotator(0,0,0)); break;
+		case Left: FrogPawn->FrogMesh->SetWorldRotation(FRotator(0,180,0)); break;
 		case None: break;
 		default: ;
 	}
@@ -120,7 +131,7 @@ bool AFroggerPlayerController::Server_Rotate_Validate(EDir Direction, AFrogPawn*
 
 void AFroggerPlayerController::Server_Move_Implementation(FVector TargetLocation, AFrogPawn* Frog)
 {
-	Frog->LaunchCharacter(TargetLocation, false, false);
+	FrogPawn->LaunchCharacter(TargetLocation, false, false);
 	//AFroggerGameState::GetFroggerGameState(this)->Server_ReplicateMove(TargetLocation, Frog);
 }
 

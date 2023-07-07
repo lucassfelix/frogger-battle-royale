@@ -53,7 +53,7 @@ protected:
 
 public:
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	class AFroggerPlayerController* FroggerController;
 	
 	// Sets default values for this pawn's properties

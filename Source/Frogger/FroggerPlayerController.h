@@ -27,7 +27,7 @@ public:
 
 	void LateInitialize();
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	AFrogPawn* FrogPawn;
 
 	bool bInitialized;
