@@ -7,6 +7,7 @@
 #include "GameFramework/Pawn.h"
 #include "FrogPawn.generated.h"
 
+UENUM(BlueprintType)
 enum EDir
 {
 	Down,
@@ -43,6 +44,9 @@ protected:
 	void MoveLeft();
 	void BeginMove(const EDir& NewDirection);
 	void LateInitialize();
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	bool bCanMove;
 	
 	bool bInitialized;
 
@@ -75,7 +79,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Launch")
 	float TimeToLand;
 
-	
+	UPROPERTY(BlueprintReadWrite)
+	UStaticMeshComponent* FrogMesh;
 
 	void RoundLocation() const;
 	

@@ -39,5 +39,8 @@ public:
 	
 	UFUNCTION(Server, unreliable, WithValidation)
 	void Server_Move(FVector TargetLocation, AFrogPawn* Frog);
+
+	UFUNCTION(Server, unreliable, WithValidation)
+	void Server_Rotate(EDir Direction, AFrogPawn* Frog);
 	
 };
