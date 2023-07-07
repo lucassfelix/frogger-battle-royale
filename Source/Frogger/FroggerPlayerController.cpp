@@ -75,6 +75,24 @@ void AFroggerPlayerController::LaunchFrog(const float HorizontalRange, const flo
 
 	//GetCharacter()->LaunchCharacter(U, false, false);
 	Server_Move(U,FrogPawn);
+	Server_Rotate(Direction,FrogPawn);
+}
+
+void AFroggerPlayerController::Server_Rotate_Implementation(EDir Direction, AFrogPawn* Frog)
+{
+	switch (Direction) {
+		case Down: Frog->FrogMesh->SetWorldRotation(FRotator(0,90,0)); break;
+		case Up: Frog->FrogMesh->SetWorldRotation(FRotator(0,270,0)); break;
+		case Right: Frog->FrogMesh->SetWorldRotation(FRotator(0,0,0)); break;
+		case Left: Frog->FrogMesh->SetWorldRotation(FRotator(0,180,0)); break;
+		case None: break;
+		default: ;
+	}
+}
+
+bool AFroggerPlayerController::Server_Rotate_Validate(EDir Direction, AFrogPawn* Frog)
+{
+	return true;
 }
 
 void AFroggerPlayerController::Server_Move_Implementation(FVector TargetLocation, AFrogPawn* Frog)

@@ -48,6 +48,11 @@ void AFrogPawn::Tick(float DeltaTime)
 		return;
 	}
 
+	if (!bCanMove)
+	{
+		return;
+	}
+	
 	if (bMoving && Direction != None)
 	{
 		FroggerController->LaunchFrog(HorizontalRange, TimeToLand, Direction);
