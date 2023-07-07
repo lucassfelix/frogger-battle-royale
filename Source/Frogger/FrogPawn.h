@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MovingPlatform.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
 #include "FrogPawn.generated.h"
@@ -68,6 +69,10 @@ public:
 	virtual void Landed(const FHitResult& Hit) override;
 	
 	EDir Direction;
+
+	bool bFollowingPlatform;
+
+	AMovingPlatform* CurrentPlatform;
 	
 	//Is character is in the middle of movement?
 	UPROPERTY(BlueprintReadWrite)

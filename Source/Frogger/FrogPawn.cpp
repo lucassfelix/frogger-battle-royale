@@ -7,6 +7,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "FroggerPlayerController.h"
+#include "MovingPlatform.h"
 #include "GameFramework/PawnMovementComponent.h"
 
 // Sets default values
@@ -19,6 +20,7 @@ AFrogPawn::AFrogPawn()
 	
 	bInitialized = false;
 	bMoving = false;
+	bFollowingPlatform = false;
 }
 
 // Called when the game starts or when spawned
@@ -48,6 +50,11 @@ void AFrogPawn::Tick(float DeltaTime)
 		return;
 	}
 
+	if(bFollowingPlatform)
+	{
+		//FroggerController->Server_Impulse(CurrentPlatform,0,0);
+	}
+
 	if (!bCanMove)
 	{
 		return;
@@ -55,6 +62,8 @@ void AFrogPawn::Tick(float DeltaTime)
 	
 	if (bMoving && Direction != None)
 	{
+		bFollowingPlatform = false;
+		//GetMovementComponent()->Activate();
 		FroggerController->LaunchFrog(HorizontalRange, TimeToLand, Direction);
 		//LaunchFrog();
 		Direction = None;
@@ -92,7 +101,10 @@ void AFrogPawn::RoundLocation() const
 		NewY = Location.Y < 0 ? -(abs(RoundedY) - RemainderY) : RoundedY - RemainderY;
 	}
 
-	GetRootComponent()->SetWorldLocation(FVector(NewX,NewY,Location.Z));
+	
+	
+	FroggerController->Server_Round(FVector(NewX,NewY,Location.Z));
+	//GetRootComponent()->SetWorldLocation(FVector(NewX,NewY,Location.Z));
 }
 
 void AFrogPawn::LaunchFrog()
@@ -148,12 +160,24 @@ void AFrogPawn::Landed(const FHitResult& Hit)
 {
 	Super::Landed(Hit);
 
-	UE_LOG(LogTemp,Warning,TEXT("Landed"));
-	
 	bMoving = false;
-	GetMovementComponent()->Velocity = FVector(0,0,0);	
+
+	UE_LOG(LogTemp,Warning,TEXT("LANDED!!!"));
 	
-	RoundLocation();
+	GetMovementComponent()->Velocity = FVector(0,0,0);	
+
+	if (auto Platform = Cast<AMovingPlatform>(Hit.HitObjectHandle.FetchActor()))
+	{
+		UE_LOG(LogTemp,Warning,TEXT("MOVINGPLATFORM!!!"));
+		bFollowingPlatform = true;
+		CurrentPlatform = Platform;
+		//GetMovementComponent()->Deactivate();
+	}
+	else
+	{
+		RoundLocation();
+	}
+	
 }
 
 void AFrogPawn::BeginMove(const EDir& NewDirection)
@@ -162,7 +186,9 @@ void AFrogPawn::BeginMove(const EDir& NewDirection)
 	{
 		return;
 	}
-	
+	UE_LOG(LogTemp,Warning,TEXT("EXITMOVINGPLATFORM!!!"));
+
+	bFollowingPlatform = false;
 	Direction = NewDirection;
 	bMoving = true;
 }

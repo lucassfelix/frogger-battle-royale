@@ -37,10 +37,16 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnServerMove(FVector TargetLocation, AFrogPawn* Frog);
 	
-	UFUNCTION(Server, unreliable, WithValidation)
+	UFUNCTION(Server, reliable, WithValidation)
 	void Server_Move(FVector TargetLocation, AFrogPawn* Frog);
 
-	UFUNCTION(Server, unreliable, WithValidation)
+	UFUNCTION(Server, reliable, WithValidation)
 	void Server_Rotate(EDir Direction, AFrogPawn* Frog);
+
+	UFUNCTION(Server, unreliable, WithValidation)
+	void Server_Impulse(AMovingPlatform* Platform,float MovingX,float MovingY);
+
+	UFUNCTION(Server, reliable, WithValidation)
+	void Server_Round(FVector Location);
 	
 };

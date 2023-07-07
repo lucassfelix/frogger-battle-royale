@@ -78,6 +78,29 @@ void AFroggerPlayerController::LaunchFrog(const float HorizontalRange, const flo
 	Server_Rotate(Direction,FrogPawn);
 }
 
+void AFroggerPlayerController::Server_Round_Implementation(FVector Location)
+{
+	FrogPawn->GetRootComponent()->SetWorldLocation(Location);
+}
+
+bool AFroggerPlayerController::Server_Round_Validate(FVector Location)
+{
+	return true;
+}
+
+void AFroggerPlayerController::Server_Impulse_Implementation(AMovingPlatform* Platform, float MovingX, float MovingY)
+{
+	auto Location = Platform->GetRootComponent()->GetComponentLocation();
+	FrogPawn->GetRootComponent()->SetWorldLocation(FVector(Location.X,Location.Y,77.5f));
+	UE_LOG(LogTemp,Warning,TEXT("Set to Vector = %f,%f,%f"),Location.X,Location.Y,77.7f);
+}
+
+bool AFroggerPlayerController::Server_Impulse_Validate(AMovingPlatform* Platform, float MovingX,float MovingY)
+{
+	return true;
+}
+
+
 void AFroggerPlayerController::Server_Rotate_Implementation(EDir Direction, AFrogPawn* Frog)
 {
 	switch (Direction) {
