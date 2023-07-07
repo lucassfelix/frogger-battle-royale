@@ -13,5 +13,11 @@ UCLASS()
 class FROGGER_API AFroggerGameState : public AGameState
 {
 	GENERATED_BODY()
+
+	UFUNCTION(BlueprintCallable)
+	void TravelToGame();
+
+	UPROPERTY(EditDefaultsOnly)
+	FString GameMapName;
 	
 };
